@@ -77,7 +77,6 @@ function start()
 end
 
 function stop()
---	add_to_chat(55,"Thank you for using ".._addon.name.." v".._addon.version..".")
 	add_to_chat(160,_addon.name.." v".._addon.version..". final stats:")
 	add_to_chat(160,"Defeated: "..enemiesDefeated.." of "..enemiesGoal.." ("..math.round((enemiesDefeated/enemiesGoal*100),2).."%)")
 	add_to_chat(160,"Obsidian Obtained: "..obsidianObtained..", Total: "..obsidianTotal)
@@ -85,6 +84,7 @@ function stop()
 end
 
 function event_incoming_text(original, modified, color)
+	-- 61 of 66 enemies vanquished.
 	if (string.find(original, "(%d+) of (%d+) enemies vanquished.")) then
 		a,b,amount,bob = string.find(original, "(%d+) of (%d+) enemies")
 		if (amount ~= nil) then
@@ -92,7 +92,6 @@ function event_incoming_text(original, modified, color)
 			enemiesGoal = bob;
 		end
 		createTextLabel();
---	end
 	
 	--	Primary objective: Vanquish 80 enemies.
 	elseif (string.find(original, "Primary objective: Vanquish (%d+) enemies.")) then
@@ -101,7 +100,6 @@ function event_incoming_text(original, modified, color)
 			enemiesGoal = amount;
 		end
 		createTextLabel();
---	end
 
 	-- You obtained 4 obsidian fragments! 
 	elseif (string.find(original, "You obtained (%d+) obsidian fragments!")) then
@@ -111,7 +109,6 @@ function event_incoming_text(original, modified, color)
 			obsidianTotal = obsidianTotal + amount;
 		end
 		createTextLabel();
---	end
 	
 	-- You now possess 550 fragments of 9999 maximum. 
 	elseif (string.find(original, "You now possess (%d+) fragments of 9999 maximum.")) then
@@ -121,7 +118,6 @@ function event_incoming_text(original, modified, color)
 		end
 		createTextLabel();
 	end
---	createTextLabel();
 	
 end
 
@@ -137,6 +133,5 @@ function createTextLabel()
 		.."% Finished: "..math.round((enemiesDefeated/enemiesGoal*100),2).."%\n"
 		.."Obsidian: "..obsidianObtained.."\n"
 		.."Total: "..obsidianTotal)
-	add_to_chat(4," enemeiesDefeated: "..enemiesDefeated..", enemeiesGoal: "..enemiesGoal)
 end
 
