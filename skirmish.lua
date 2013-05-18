@@ -1,6 +1,6 @@
 _addon = {}
 _addon.name = 'Skirmish'
-_addon.version = '1.1'
+_addon.version = '1.11'
 _addon.author = 'Ragnarok.Ikonic'
 
 enemiesGoal = 0;
@@ -84,8 +84,13 @@ function start()
 end
 
 function stop()
+	if (enemiesGoal ~= 0) then
+		enemiesPercent = math.round((enemiesDefeated/enemiesGoal*100),2)
+	else
+		enemiesPercent = 0;
+	end
 	add_to_chat(160,_addon.name.." v".._addon.version..". final stats:")
-	add_to_chat(160,"Defeated: "..enemiesDefeated.." of "..enemiesGoal.." ("..math.round((enemiesDefeated/enemiesGoal*100),2).."%)")
+	add_to_chat(160,"Defeated: "..enemiesDefeated.." of "..enemiesGoal.." ("..enemiesPercent.."%)")
 	add_to_chat(160,"Obsidian Obtained: "..obsidianObtained..", Total: "..obsidianTotal)
 	add_to_chat(160,"Pool Weapons: "..table.concat(poolWeapons, ', '))
 	tb_delete("skirmishTracker");
@@ -148,9 +153,14 @@ function createTextLabel()
 	tb_set_font("skirmishTracker", "Arial", 8)
 	tb_set_location("skirmishTracker", 5, 450)
 	tb_set_visibility("skirmishTracker", 1)
+	if (enemiesGoal ~= 0) then
+		enemiesPercent = math.round((enemiesDefeated/enemiesGoal*100),2)
+	else
+		enemiesPercent = 0;
+	end
 	tb_set_text("skirmishTracker", "Defeated: "..enemiesDefeated.."\n"
 		.."Goal: "..enemiesGoal.."\n"
-		.."% Finished: "..math.round((enemiesDefeated/enemiesGoal*100),2).."%\n"
+		.."% Finished: "..enemiesPercent.."%\n"
 		.."Obsidian: "..obsidianObtained.."\n"
 		.."Total: "..obsidianTotal.."\n"
 		.."Possible Weapons: \n   "..table.concat(poolWeapons, '\n   '))
