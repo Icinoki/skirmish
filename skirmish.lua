@@ -1,15 +1,18 @@
 _addon = {}
 _addon.name = 'Skirmish'
-_addon.version = '1.0'
+_addon.version = '1.1'
 _addon.author = 'Ragnarok.Ikonic'
 
 enemiesGoal = 0;
 enemiesDefeated = 0;
 obsidianObtained = 0;
 obsidianTotal = 0;
+possibleWeapons = {"Bocluamni", "Faizzeer", "Aedold", "Leisilonu", "Iclamar", "Shichishito", "Crobaci", "Ninza", "Kannakiri", "Hgafircian", "Qatsunoci", "Iizamal", "Lehbrailg", "Uffrat", "Iztaasu"};
+poolWeapons = {};
 
 require 'tablehelper'
 require 'mathhelper'
+require 'stringhelper'
 
 function event_load()
 	send_command('alias skirmish lua command skirmish')
@@ -54,6 +57,9 @@ function event_addon_command(...)
 			send_command('input /echo You now possess 550 fragments of 9999 maximum.')
         elseif comm:lower() == 'test4' then
 			send_command('input /echo '.. enemiesDefeated+1 ..' of 66 enemies vanquished.')
+        elseif comm:lower() == 'test5' then
+			send_command('input /echo -an uffrat')
+			send_command('input /echo -A qatsunoci')
         else
             return
         end
@@ -67,6 +73,7 @@ function reset()
 	enemiesDefeated = 0;
 	obsidianObtained = 0;
 	obsidianTotal = 0;
+	poolWeapons = {};
 	createTextLabel();
 end
 
@@ -80,6 +87,7 @@ function stop()
 	add_to_chat(160,_addon.name.." v".._addon.version..". final stats:")
 	add_to_chat(160,"Defeated: "..enemiesDefeated.." of "..enemiesGoal.." ("..math.round((enemiesDefeated/enemiesGoal*100),2).."%)")
 	add_to_chat(160,"Obsidian Obtained: "..obsidianObtained..", Total: "..obsidianTotal)
+	add_to_chat(160,"Pool Weapons: "..table.concat(poolWeapons, ', '))
 	tb_delete("skirmishTracker");
 end
 
@@ -117,6 +125,18 @@ function event_incoming_text(original, modified, color)
 			obsidianTotal = amount;
 		end
 		createTextLabel();
+		
+	-- -A qatsunoci
+	-- -An uffrat
+	elseif (string.find(original, "-(%w+) (%w+)")) then
+		a,b,amount,weapon = string.find(original, "-(%w+) (%w+)")
+		if (weapon ~= nil) then
+			weapon = string.ucfirst(weapon);
+			if table.contains(possibleWeapons,weapon) then
+				poolWeapons[#poolWeapons+1] = weapon;
+			end
+		end
+		createTextLabel();
 	end
 	
 end
@@ -132,6 +152,7 @@ function createTextLabel()
 		.."Goal: "..enemiesGoal.."\n"
 		.."% Finished: "..math.round((enemiesDefeated/enemiesGoal*100),2).."%\n"
 		.."Obsidian: "..obsidianObtained.."\n"
-		.."Total: "..obsidianTotal)
+		.."Total: "..obsidianTotal.."\n"
+		.."Possible Weapons: \n   "..table.concat(poolWeapons, '\n   '))
 end
 
